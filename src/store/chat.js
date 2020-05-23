@@ -22,10 +22,10 @@ const state = {
         // },
     ],
     hasFetchedChat: false,
-    // isLoggedIn: false,
-    // username: undefined,
-    isLoggedIn: true,
-    username: 'alcatraz627',
+    isLoggedIn: false,
+    username: undefined,
+    // isLoggedIn: true,
+    // username: 'alcatraz627',
 
 };
 
@@ -41,30 +41,37 @@ const actions = {
         const response = await db.ref('chats').on('value', snapshot => {
             let chats = []
             snapshot.forEach(snap => { chats.push({ id: snap.key, ...snap.val() }) });
-            // snapshot.forEach(snap => chats.push(snap.val()));
-            // console.log(chats);
+            chats.sort((a, b) => (a.timestamp - b.timestamp))
             commit('setChat', chats);
             if (!state.hasFetchedChat) commit('setFetchState', true);
         })
     },
     async sendMessage({ commit, state: { username } }, message) {
-        console.log(message)
         let id = db.ref('chats').push().key
-        let data = { id, username, message }
+        let data = { id, username, message, timestamp: Date.now() }
         let updates = { [id]: data }
 
         db.ref('chats').update(updates, error => {
             console.log(error ? error : "Sent!");
         })
-
-        // commit('addMessage', data)
+    },
+    logIn({ commit }, username) {
+        console.log("Logging in:", username)
+        commit('setUserName', username)
+        commit('setLogInStatus', true)
+    },
+    logOut({ commit }) {
+        commit('setUserName', null)
+        commit('setLogInStatus', false)
     }
 };
 
 const mutations = {
     setChat: (state, chatList) => (state.messages = chatList),
     setFetchState: (state, fetchState) => (state.hasFetchedChat = !!fetchState),
-    addMessage: (state, data) => state.messages = [...state.messages, { ...data }]
+    addMessage: (state, data) => state.messages = [...state.messages, { ...data }],
+    setUserName: (state, username) => state.username = username,
+    setLogInStatus: (state, status) => state.isLoggedIn = status,
 };
 
 export default { state, getters, actions, mutations }

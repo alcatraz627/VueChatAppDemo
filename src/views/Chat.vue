@@ -3,20 +3,20 @@
     <!-- <div class="md-headline">The Chat</div> -->
     <div class="chat-list md-scrollbar">
       <div
-      class="chat-message-row"
+        class="chat-message-row"
         v-for="message in listChat"
         :key="'msg-'+message.id"
         v-bind:align="getUserName == message.username?'right':'left'"
       >
         <div class="username">{{message.username}}</div>
-        <div
-          class="chat-message"
-          v-bind:class="{isSelf: getUserName == message.username}"
-        >({{message.id}}){{message.message}}</div>
+        <div class="chat-message" v-bind:class="{isSelf: getUserName == message.username}">
+          {{message.message}}
+          <md-tooltip>{{Date(message.timestamp)}}</md-tooltip>
+        </div>
       </div>
     </div>
     <div class="send-message">
-      <form novalidate class="md-layout" @submit="onSendMessage">
+      <form novalidate class="md-layout" v-on:submit.prevent="onSendMessage">
         <md-field>
           <label for="messageToSend">Message...</label>
           <md-input name="messageToSend" id="messageToSend" v-model="messageToSend" />
@@ -38,10 +38,11 @@ export default {
   methods: {
     ...mapActions(["fetchChat", "sendMessage"]),
     onSendMessage(e) {
-      e.preventDefault();
-      // console.log(this.messageToSend);
-      this.sendMessage(this.messageToSend);
-      this.messageToSend = ''
+      // e.preventDefault();
+      if (this.messageToSend.trim() != "") {
+        this.sendMessage(this.messageToSend);
+        this.messageToSend = "";
+      }
     }
   },
   computed: mapGetters(["listChat", "getFetchedState", "getUserName"]),

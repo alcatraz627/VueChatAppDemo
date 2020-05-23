@@ -5,15 +5,31 @@
     <br />
     <div class="md-headline">Join the chat with your username</div>
     <br />
-    <form novalidate class="md-layout" id="userNameLogin">
+    <form novalidate class="md-layout" id="userNameLogin" v-on:submit.prevent="onLogin">
       <md-field>
         <label for="username">Username</label>
-        <md-input name="username" id="username" />
-        <md-button class="md-primary md-raised md-dense">Join</md-button>
+        <md-input name="username" id="username" v-model="username" />
+        <md-button class="md-primary md-raised md-dense" type="submit" v-bind:disabled="username==''">Join</md-button>
       </md-field>
     </form>
   </div>
 </template>
+
+<script>
+import { mapActions } from "vuex";
+export default {
+  name: "Home",
+  data: () => ({ username: "alcat" }),
+  methods: {
+    ...mapActions(["logIn"]),
+    onLogin(e) {
+      // e.preventDefault()
+      // console.log(this.username);
+      this.logIn(this.username);
+    }
+  }
+};
+</script>
 
 <style scoped>
 .parent {
@@ -26,12 +42,3 @@
   margin: auto;
 }
 </style>
-
-<script>
-// @ is an alias to /src
-// import HelloWorld from '@/components/HelloWorld.vue'
-
-export default {
-  name: "Home"
-};
-</script>
