@@ -1,32 +1,11 @@
-import { v1 as uuidv1 } from 'uuid'
-
 import { db } from '../firebase'
-
+import router from '../router'
 
 const state = {
-    messages: [
-        // {
-        //     id: 0,
-        //     username: 'alcatraz627',
-        //     message: 'TestUno'
-        // },
-        // {
-        //     id: 1,
-        //     username: 'alcatraz627',
-        //     message: 'Working!'
-        // },
-        // {
-        //     id: 2,
-        //     username: 'newuser2',
-        //     message: 'Wow!'
-        // },
-    ],
+    messages: [],
     hasFetchedChat: false,
     isLoggedIn: false,
     username: undefined,
-    // isLoggedIn: true,
-    // username: 'alcatraz627',
-
 };
 
 const getters = {
@@ -38,7 +17,7 @@ const getters = {
 
 const actions = {
     async fetchChat({ commit, state }) {
-        const response = await db.ref('chats').on('value', snapshot => {
+        await db.ref('chats').on('value', snapshot => {
             let chats = []
             snapshot.forEach(snap => { chats.push({ id: snap.key, ...snap.val() }) });
             chats.sort((a, b) => (a.timestamp - b.timestamp))
@@ -56,13 +35,14 @@ const actions = {
         })
     },
     logIn({ commit }, username) {
-        console.log("Logging in:", username)
         commit('setUserName', username)
         commit('setLogInStatus', true)
+        router.push("/chat")
     },
     logOut({ commit }) {
         commit('setUserName', null)
         commit('setLogInStatus', false)
+        router.push("/")
     }
 };
 

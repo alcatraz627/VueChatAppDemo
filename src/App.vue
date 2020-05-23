@@ -22,8 +22,16 @@ export default {
 </script>
 
 <style>
+html {
+  overflow: hidden;
+}
+body {
+  /* background: #efefef; */
+  background: #fafafa;
+}
 #content {
   max-width: 1200px;
   margin: auto;
+  background: #fff;
 }
 </style>

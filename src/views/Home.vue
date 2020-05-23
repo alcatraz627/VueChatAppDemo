@@ -9,17 +9,22 @@
       <md-field>
         <label for="username">Username</label>
         <md-input name="username" id="username" v-model="username" />
-        <md-button class="md-primary md-raised md-dense" type="submit" v-bind:disabled="username==''">Join</md-button>
+        <md-button
+          class="md-primary md-raised md-dense"
+          type="submit"
+          v-bind:disabled="username==''"
+        >Join</md-button>
       </md-field>
     </form>
   </div>
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "Home",
   data: () => ({ username: "alcat" }),
+  computed: mapGetters(["getLoginState"]),
   methods: {
     ...mapActions(["logIn"]),
     onLogin(e) {
@@ -27,6 +32,9 @@ export default {
       // console.log(this.username);
       this.logIn(this.username);
     }
+  },
+  created() {
+    if (this.getLoginState) this.$router.replace("/chat");
   }
 };
 </script>
@@ -34,6 +42,7 @@ export default {
 <style scoped>
 .parent {
   margin: 50px 30px;
+  padding: 150px 0;
   text-align: center;
 }
 

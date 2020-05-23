@@ -1,7 +1,7 @@
 <template>
   <div class="parent">
     <!-- <div class="md-headline">The Chat</div> -->
-    <div class="chat-list md-scrollbar">
+    <div :key="getUserName" class="chat-list">
       <div
         class="chat-message-row"
         v-for="message in listChat"
@@ -16,12 +16,13 @@
       </div>
     </div>
     <div class="send-message">
+      <md-divider />
       <form novalidate class="md-layout" v-on:submit.prevent="onSendMessage">
         <md-field>
           <label for="messageToSend">Message...</label>
           <md-input name="messageToSend" id="messageToSend" v-model="messageToSend" />
 
-          <md-button type="submit" class="md-primary md-raised sendButton">
+          <md-button type="submit" class="md-accent md-raised sendButton">
             <md-icon class="sendIcon">send</md-icon>
           </md-button>
         </md-field>
@@ -45,19 +46,33 @@ export default {
       }
     }
   },
-  computed: mapGetters(["listChat", "getFetchedState", "getUserName"]),
+  computed: mapGetters([
+    "listChat",
+    "getLoginState",
+    "getFetchedState",
+    "getUserName"
+  ]),
+
   created() {
+    if (!this.getLoginState) this.$router.replace("/");
     this.fetchChat();
+  },
+  updated() {
+    let chatListElem = this.$el.querySelector(".chat-list");
+    chatListElem.scrollTop = chatListElem.scrollHeight;
   }
 };
 </script>
 
 <style scoped>
+.parent {
+  height: calc(82vh);
+}
 .chat-list {
-  /* border: 1px dotted red; */
-  height: 84vh;
+  height: 100%;
   margin: 2vh auto 0vh;
-  overflow-y: scroll;
+  padding: 20px 15px;
+  overflow: auto;
 }
 
 .chat-message-row {
@@ -68,8 +83,10 @@ export default {
   /* margin: 0px 0; */
   border: 1px solid #ddd;
   /* background-color: #eee; */
-  border-radius: 15px;
+  border-radius: 30px;
   display: inline-block;
+  max-width: 70%;
+  text-align: left;
 }
 
 .username {
@@ -86,7 +103,8 @@ export default {
 }
 
 .send-message {
-  height: 7vh;
+  height: 100px;
+  padding: 0 15px;
   /* border: 1px dotted red; */
 }
 
