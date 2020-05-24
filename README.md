@@ -7,7 +7,7 @@ There is currently no authentication mechanism and anyone can join the chat, so 
 
 Chunk splitting and other optimizations are not implemented as the app is quite small and those optimizations will not make a significant improvement in loading speed.
 
-There is no persistence of login and the login information is lost upon login. However, the messages are stored in the Firebase RealTime Database and persist through all changes; and the app shows the message history from the beginning to any user at all times.
+There is no persistence of login, so the login information is lost upon refresh. However, the messages are stored in the _Firebase RealTime Database_ and persist through all changes; and the app shows the message history from the beginning to any user at all times.
 
 The helper libraries and frameworks used:
 - It uses [Vue Material](https://vuematerial.io/) library for the UI elements.
@@ -15,8 +15,9 @@ The helper libraries and frameworks used:
 - State management is done with [VueX](https://vuex.vuejs.org/).
 - [Vue Router](https://router.vuejs.org/) is used to handle the application being on the login screen and the chat screen.
 
-Although *Vue Material* supports SCSS, plain CSS is used throughout the application.
-The application can be viewed on any device or browser capable of running javascript.
+Although _Vue Material_ supports SASS/SCSS, plain CSS is used throughout the application.
+
+> The application can be viewed on any device or browser capable of running javascript.
 
 ### Setup the project
 ```
