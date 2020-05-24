@@ -2,8 +2,9 @@
   <div class="parent">
     <div class="md-display-3">Demo Chat App</div>
     <br />
-    <br />
     <div class="md-headline">Join the chat with your username</div>
+    <br />
+    <br />
     <br />
     <form novalidate class="md-layout" id="userNameLogin" v-on:submit.prevent="onLogin">
       <md-field>
@@ -23,17 +24,17 @@
 import { mapActions, mapGetters } from "vuex";
 export default {
   name: "Home",
-  data: () => ({ username: "alcat" }),
+  data: () => ({ username: "" }),
   computed: mapGetters(["getLoginState"]),
   methods: {
     ...mapActions(["logIn"]),
     onLogin(e) {
-      // e.preventDefault()
-      // console.log(this.username);
-      this.logIn(this.username);
+      // Check if the username is nonempty before logging in
+      if (this.username.trim() != "") this.logIn(this.username);
     }
   },
   created() {
+    // Redirect to chat screen if user is logged in
     if (this.getLoginState) this.$router.replace("/chat");
   }
 };

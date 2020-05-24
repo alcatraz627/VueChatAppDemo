@@ -1,6 +1,5 @@
 <template>
   <div class="parent">
-    <!-- <div class="md-headline">The Chat</div> -->
     <div :key="getUserName" class="chat-list">
       <div
         class="chat-message-row"
@@ -22,8 +21,8 @@
           <label for="messageToSend">Message...</label>
           <md-input name="messageToSend" id="messageToSend" v-model="messageToSend" />
 
-          <md-button type="submit" class="md-accent md-raised sendButton">
-            <md-icon class="sendIcon">send</md-icon>
+          <md-button type="submit" class="md-accent md-raised">
+            <md-icon>send</md-icon>
           </md-button>
         </md-field>
       </form>
@@ -39,7 +38,7 @@ export default {
   methods: {
     ...mapActions(["fetchChat", "sendMessage"]),
     onSendMessage(e) {
-      // e.preventDefault();
+      // Only allow nonempty messages to be sent
       if (this.messageToSend.trim() != "") {
         this.sendMessage(this.messageToSend);
         this.messageToSend = "";
@@ -54,10 +53,13 @@ export default {
   ]),
 
   created() {
+    // Redirect to home page if user is not logged in
     if (!this.getLoginState) this.$router.replace("/");
+    // Fetch the chat history from firebase database on mounting the component
     this.fetchChat();
   },
   updated() {
+    // Scroll to the bottom of the chat on any message
     let chatListElem = this.$el.querySelector(".chat-list");
     chatListElem.scrollTop = chatListElem.scrollHeight;
   }
@@ -80,13 +82,12 @@ export default {
 }
 .chat-message {
   padding: 12px 20px;
-  /* margin: 0px 0; */
   border: 1px solid #ddd;
-  /* background-color: #eee; */
   border-radius: 30px;
   display: inline-block;
   max-width: 70%;
   text-align: left;
+  word-break: break-all;
 }
 
 .username {
@@ -94,21 +95,15 @@ export default {
   font-size: 0.9em;
   color: #666;
   padding-left: 8px;
+  padding-right: 8px;
 }
 
 .isSelf {
-  /* border: 1px dotted red; */
   background-color: #ddd;
-  /* margin-left: auto; */
 }
 
 .send-message {
   height: 100px;
   padding: 0 15px;
-  /* border: 1px dotted red; */
 }
-
-/* .sendButton {
-  background-color: green;
-} */
 </style>
